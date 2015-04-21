@@ -37,6 +37,12 @@ public abstract class Tarea {
 	 * Contiene el historial de pasos de la tarea
 	 */
 	private Collection<Paso> pasos = new ArrayList<Paso>();
+	
+	
+
+	private Tarea() {
+		super();
+	}
 
 	/**
 	 * Constructor

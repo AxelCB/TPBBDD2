@@ -23,6 +23,10 @@ public class Usuario {
 	 */
 	private String email;
 	
+	public Usuario(){
+		super();
+	}
+	
 	/**
 	 * Constructor
 	 * Recibe todas la variables de la clase

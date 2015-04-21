@@ -17,6 +17,10 @@ public class PerfilDeAdministrador extends PerfilDeUsuario {
 	 */
 	private Boolean creador;
 	
+	public PerfilDeAdministrador(){
+		super();
+	}
+	
 	/**
 	 * Constructor
 	 * Recibe todas la variables de la clase

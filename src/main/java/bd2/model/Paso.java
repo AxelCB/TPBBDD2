@@ -26,6 +26,10 @@ public class Paso {
 	 */
 	private Pizarra pizarra;
 
+	public Paso(){
+		super();
+	}
+	
 	/**
 	 * Constructor
 	 * Recibe todas la variables de la clase

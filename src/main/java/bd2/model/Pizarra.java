@@ -26,6 +26,10 @@ public class Pizarra {
 	 */
 	private Collection<Tarea> tareas = new HashSet<Tarea>();
 	
+	public Pizarra(){
+		super();
+	}
+	
 	/**
 	 * Constructor
 	 * Recibe solo el nombre

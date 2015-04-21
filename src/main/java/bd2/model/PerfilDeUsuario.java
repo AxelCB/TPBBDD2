@@ -27,6 +27,10 @@ public class PerfilDeUsuario {
 	 */
 	private Usuario usuario;
 
+	public PerfilDeUsuario(){
+		super();
+	}
+	
 	/**
 	 * Constructor
 	 * Recibe todas la variables de la clase
