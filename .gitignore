@@ -13,3 +13,7 @@ hs_err_pid*
 
 #javadoc
 /doc
+/target/
+.classpath
+.project
+.settings/

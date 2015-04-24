@@ -1,8 +1,8 @@
 package bd2.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 
 /**
  * Representa a una tarea de investigacion
@@ -47,7 +47,7 @@ public class TareaDeInvestigacion extends Tarea {
 	 * No recibe parametros
 	 */
 	public TareaDeInvestigacion() {
-		super(false, null, null, new HashSet<Paso>());
+		super(false, null, null, new ArrayList<Paso>());
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class TareaDeInvestigacion extends Tarea {
 	 * @param fechaLimite
 	 */
 	public TareaDeInvestigacion(String descripcion, Date fechaLimite) {
-		super(false, fechaLimite, descripcion, new HashSet<Paso>());
+		super(false, fechaLimite, descripcion, new ArrayList<Paso>());
 		this.hipotesis = "";
 		this.resultado = "";		
 	}
