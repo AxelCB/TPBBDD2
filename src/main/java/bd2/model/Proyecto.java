@@ -38,6 +38,9 @@ public class Proyecto {
 	 */
 	private Collection<Pizarra> pizarrasArchivadas = new HashSet<Pizarra>();
 
+	/**
+	 * Constructor vacio
+	 */
 	public Proyecto() {
 		super();
 	}
@@ -126,11 +129,8 @@ public class Proyecto {
 		while ((i.hasNext()) && (!fin)) {
 			u = i.next();
 	    	if (u.getUsuario().equals(candidato)){
-	    		if (!u.esCreador()){
-	    			this.perfiles.remove(u);
-	    			fin = true;
-	    		}
-	    		else throw new Exception("No se puede eliminar al creador del proyecto");
+    			u.eliminarDe(this);
+    			fin = true;
 	    	}
 	    }
 	}
@@ -141,7 +141,7 @@ public class Proyecto {
 	 * 							eliminar al creador del proyecto
 	 */
 	public void eliminarPerfil(PerfilDeUsuario perfilDeUsuario) throws Exception {
-		this.eliminarUsuario(perfilDeUsuario.getUsuario());		
+		this.getPerfiles().remove(perfilDeUsuario);	
 	}
 	
 	/**
@@ -224,7 +224,6 @@ public class Proyecto {
 	}
 
 	/**
-	 * 
 	 * @return
 	 */
 	public Long getId() {
@@ -232,7 +231,6 @@ public class Proyecto {
 	}
 
 	/**
-	 * 
 	 * @param id
 	 */
 	public void setId(Long id) {
