@@ -39,7 +39,9 @@ public abstract class Tarea {
 	private Collection<Paso> pasos = new ArrayList<Paso>();
 	
 	
-
+	/**
+	 * Constructor vacio
+	 */
 	private Tarea() {
 		super();
 	}
@@ -84,7 +86,7 @@ public abstract class Tarea {
 	};
 
 	/**
-	 * 
+	 * @return
 	 */
 	public void completar(){
 		this.completa = true;
@@ -108,8 +110,17 @@ public abstract class Tarea {
 	 * @param pizarra	pizarra a ser agregada
 	 */
 	public void agregarAPizarra(Pizarra pizarra){
-		this.pasos.add(new Paso(new Date(), pizarra));
 		pizarra.agregarTarea(this);
+	}
+	
+	/**
+	 * Agrega el paso enviado como parametro a la coleccion de pasos
+	 * de esta Tarea.
+	 * 
+	 * @param paso
+	 */
+	public void agregarPaso(Paso paso){
+		this.getPasos().add(paso);
 	}
 
 	/**

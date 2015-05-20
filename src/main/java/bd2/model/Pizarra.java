@@ -1,6 +1,7 @@
 package bd2.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 /**
@@ -26,6 +27,9 @@ public class Pizarra {
 	 */
 	private Collection<Tarea> tareas = new HashSet<Tarea>();
 	
+	/**
+	 * Constructor vacio
+	 */
 	public Pizarra(){
 		super();
 	}
@@ -64,6 +68,7 @@ public class Pizarra {
 	 * @param tarea
 	 */
 	public void agregarTarea(Tarea tarea){
+		tarea.agregarPaso(new Paso(new Date(), this));
 		this.getTareas().add(tarea);
 	}
 
@@ -116,7 +121,6 @@ public class Pizarra {
 	}
 
 	/**
-	 * 
 	 * @return
 	 */
 	public Long getId() {
@@ -124,7 +128,6 @@ public class Pizarra {
 	}
 
 	/**
-	 * 
 	 * @param id
 	 */
 	public void setId(Long id) {

@@ -4,119 +4,78 @@
  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="bd2.model">
-
-	<class name="Paso" table="Paso">
-		<id name="id" type="long" column="id">
-			<generator class="increment"/>
-		</id>
-		<property name="fechaDeIngreso" type="date" column="fechaDeIngreso"/>
-		
-		<many-to-one name="pizarra" class="Pizarra" column="pizarra_id" not-null="true" cascade="all" unique="false"/>
-	</class>
-	
-<!-- 	<class name="PerfilDeAdministrador" table="PerfilDeAdministrador"> -->
-<!-- 		<id name="id" type="long" column="id"> -->
-<!-- 			<generator class="increment"></generator> -->
-<!-- 		</id> -->
-		
-<!-- 		<property name="creador" type="boolean" column="creador"/> -->
-<!-- 	</class> -->
 	
 	<class name="PerfilDeUsuario" table="PerfilDeUsuario">
 		<id name="id" type="long" column="id">
-			<generator class="increment"></generator>
+			<generator class="native"></generator>
 		</id>
-		
 		<property name="fechaDeCreacion" type="date" column="fechaDeCreacion"/>
-		
-		<many-to-one name="usuario" class="Usuario" column="usuario_id" not-null="true" cascade="all" unique="false"/>
-		
+		<many-to-one name="usuario" class="Usuario" column="usuario_id" not-null="true" unique="false"/>
 		<joined-subclass name="PerfilDeAdministrador" table="PerfilDeAdministrador">
 			<key column="perfil_administrador_id"/>
 			<property name="creador" type="boolean" column="creador"/>
 		</joined-subclass>
-		
 	</class>
 	
 	<class name="Pizarra" table="Pizarra">
 		<id name="id" type="long" column="id">
-			<generator class="increment"></generator>
+			<generator class="native"></generator>
 		</id>
-		
 		<property name="nombre" type="string" column="nombre"/>
-		
 		<set name="tareas" cascade="all">
 			<key column="tarea_id" />
 			<one-to-many class="Tarea"/>
 		</set>
-		
 	</class>
 	
 	<class name="Proyecto" table="Proyecto">
 		<id name="id" type="long" column="id">
 			<generator class="native"></generator>
 		</id>
-		
 		<set name="perfiles" cascade="all">
 			<key column="proyecto_id"/>
 			<one-to-many class="PerfilDeUsuario"/>
 		</set>
-		
 		<set name="pizarras" cascade="all">
 			<key column="proyecto_id"/>
 			<one-to-many class="Pizarra"/>
 		</set>		
-		
 		<set name="pizarrasArchivadas" cascade="all">
 			<key column="proyecto_archivada_id"/>
 			<one-to-many class="Pizarra"/>
 		</set>
-		
 	</class>
 	
 	<class name="Sitio" table="Sitio">
 		<id name="id" type="long" column="id">
-			<generator class="increment"></generator>
+			<generator class="native"></generator>
 		</id>
-		
 		<set name="proyectos" cascade="all">
 			<key column="sitio_id"/>
 			<one-to-many class="Proyecto"/>
 		</set>
-		
 		<set name="usuarios" cascade="all">
 			<key column="sitio_id"/>
 			<one-to-many class="Usuario"/>
 		</set>
-		
-<!-- 		<many-to-one name="proyectos" class="Proyecto" column="proyecto_id" not-null="true" cascade="all" unique="false"/> -->
-		
-<!-- 		<many-to-one name="usuarios" class="Usuario" column="usuario_id" not-null="true" cascade="all" unique="false"/> -->
 	</class>
 	
 	<class name="Tarea" table="Tarea">
 		<id name="id" type="long" column="id">
-			<generator class="increment"></generator>
+			<generator class="native"></generator>
 		</id>
-		
 		<discriminator column="tipo_tarea" type="string"/>
-		
 		<property name="completa" type="boolean" column="completa"/>
 		<property name="descripcion" type="string" column="descripcion"/>
 		<property name="fechaLimite" type="date" column="fechaLimite"/>
-		
-<!-- 		<many-to-one name="pasos" class="Paso" not-null="true" column="paso_id" cascade="all" unique="false" /> -->
-		
 		<list name="pasos" cascade="all">
-			<key column="tarea_id" not-null="true"/>
-			<list-index base="0" column="index"/>
+			<key column="tarea_id"/>
+			<list-index base="0" column="index_paso"/>
 			<one-to-many class="Paso"/>
 		</list>
-		
 		<subclass name="TareaDeDesarrollo" discriminator-value="td">
-			<property name="requerimientos" type="string" column="requerimientos" length="1000"/>
+			<property name="requerimientos" type="string" column="requerimientos" length="1024"/>
 		</subclass>
-		
 		<subclass name="TareaDeInvestigacion" discriminator-value="ti">
 			<property name="hipotesis" type="string" column="hipotesis"/>
 			<property name="resultado" type="string" column="resultado"/>
@@ -125,10 +84,18 @@
 	
 	<class name="Usuario" table="Usuario">
 		<id name="id" type="long" column="id">
-			<generator class="increment"></generator>
+			<generator class="native"></generator>
 		</id>
 		<property name="nombre" not-null="true" type="string" column="nombre"/>
 		<property name="email" not-null="true" type="string" column="email"/>
+	</class>
+
+	<class name="Paso" table="Paso">
+		<id name="id" type="long" column="id_paso">
+			<generator class="native"/>
+		</id>
+		<property name="fechaDeIngreso" type="date" column="fechaDeIngreso"/>
+		<many-to-one name="pizarra" class="Pizarra" column="pizarra_id" not-null="true" cascade="none"/>
 	</class>
 
 </hibernate-mapping>
