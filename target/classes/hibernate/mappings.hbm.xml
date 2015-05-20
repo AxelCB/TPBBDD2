@@ -46,7 +46,7 @@
 		<property name="nombre" type="string" column="nombre"/>
 		
 		<set name="tareas" cascade="all">
-			<key column="tarea_id" not-null="true"/>
+			<key column="tarea_id" />
 			<one-to-many class="Tarea"/>
 		</set>
 		
@@ -58,7 +58,7 @@
 		</id>
 		
 		<set name="perfiles" cascade="all">
-			<key column="proyecto_id" not-null="true"/>
+			<key column="proyecto_id"/>
 			<one-to-many class="PerfilDeUsuario"/>
 		</set>
 		
@@ -80,12 +80,12 @@
 		</id>
 		
 		<set name="proyectos" cascade="all">
-			<key column="sitio_id" not-null="true"/>
+			<key column="sitio_id"/>
 			<one-to-many class="Proyecto"/>
 		</set>
 		
 		<set name="usuarios" cascade="all">
-			<key column="sitio_id" not-null="true"/>
+			<key column="sitio_id"/>
 			<one-to-many class="Usuario"/>
 		</set>
 		
@@ -108,13 +108,13 @@
 <!-- 		<many-to-one name="pasos" class="Paso" not-null="true" column="paso_id" cascade="all" unique="false" /> -->
 		
 		<list name="pasos" cascade="all">
-			<key column="tarea_id" not-null="true"></key>
-			<list-index base="0"></list-index>
+			<key column="tarea_id" not-null="true"/>
+			<list-index base="0" column="index"/>
 			<one-to-many class="Paso"/>
 		</list>
 		
 		<subclass name="TareaDeDesarrollo" discriminator-value="td">
-			<property name="requerimientos" type="string" column="requerimientos"/>
+			<property name="requerimientos" type="string" column="requerimientos" length="1000"/>
 		</subclass>
 		
 		<subclass name="TareaDeInvestigacion" discriminator-value="ti">
