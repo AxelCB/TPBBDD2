@@ -1,5 +1,6 @@
 package bd2.util;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -25,10 +26,12 @@ public class Queries {
 
 			listarPizzarras(session);
 			listarTareasConDescripcion(session,"comprobar");
-//			pizarraConMasTareas(session);
+			pizarraConMasTareas(session);
 			emailsDeAdministradorDeProyectosConMasDeUnaPizarraArchivada(session);
+			tareasQueHayanPasadoPorPizarra(session);
 			tareasConMasPasosQue(session, 2);
-			pizarrasConTareasDeAmbosTipos(session);
+//			pizarrasConTareasDeAmbosTipos(session);
+			tareasPizarrasVencidasMarzo(session);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -71,27 +74,13 @@ public class Queries {
 		System.out.println("--------------------------------------");
 		System.out.println("c)Obtener la Pizarra que tenga más tareas. Imprimir ”Pizarra con más tareas: <nombre> (<cantidad de tareas> tareas)”");
 		System.out.println("--------------------------------------");
-		Query query = session.createQuery("FROM Pizarra WHERE id = ("
-				+ "SELECT max(conteo) FROM ("
-					+ "SELECT count(t.id) as conteo FROM Pizzara as p INNER JOIN p.tareas as t GROUP BY p.id))");
+		Query query = session.createQuery("FROM Pizarra as p ORDER BY p.tareas.size DESC ").setMaxResults(1);
 		List<Object> resultados = Queries.ejecutar(session, query);
 		for (Object object : resultados) {
 			System.out.println("Pizarra con más tareas: "+((Pizarra)object).getNombre()+" ("+((Pizarra)object).getTareas().size()+" tareas)");
 		}
 		System.out.println("--------------------------------------");
-		/*
-		 * SQL
-	select * from Pizarra 
-	WHERE id = (
-		SELECT max(conteo) 
-		FROM (
-			SELECT count(t.id) AS conteo 
-			FROM Pizarra as p 
-				INNER JOIN Tarea as t ON(p.id=t.tarea_id)
-			GROUP BY p.id
-		) cuenta
-	);
-		 */
+
 	}
 	
 	public static void emailsDeAdministradorDeProyectosConMasDeUnaPizarraArchivada(Session session){
@@ -153,6 +142,28 @@ public class Queries {
 		System.out.println("--------------------------------------");
 	}
 	
+	public static void tareasPizarrasVencidasMarzo(Session session){
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+		startDate.set(2015, 2, 1);
+		endDate.setTime(startDate.getTime());
+		endDate.add(Calendar.MONTH, 1);
+		endDate.add(Calendar.DAY_OF_MONTH, -1);
+		System.out.println("--------------------------------------");
+		System.out.println("h)Obtener las pizarras que tengan tareas vencidas en marzo, es decir que sus fechas límite estén dentro marzo de 2015 y no estén completas. Imprimir “Pizarra: <nombre>”");
+		System.out.println("--------------------------------------");
+		Query query = session.createQuery("SELECT p FROM Pizarra as p INNER JOIN p.tareas as t "
+				+ "WHERE t.fechaLimite BETWEEN :startDate AND :endDate )")
+				.setDate("startDate", startDate.getTime())
+				.setDate("endDate", endDate.getTime());
+		String impresion = "Pizarra: ";		
+		List<Object> resultados = Queries.ejecutar(session, query);
+		for (Object object : resultados) {
+			System.out.println(impresion+((Pizarra)object).getNombre());
+		}
+		System.out.println("--------------------------------------");
+	}
+	
 //	public static void listarGenerico(Session session, Query query, String enunciado, String impresion){
 //		System.out.println("--------------------------------------");
 //		System.out.println(enunciado);
@@ -164,6 +175,7 @@ public class Queries {
 //		System.out.println("--------------------------------------");
 //	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Object> ejecutar(Session session,Query query){	
 		Transaction tx = null;
 		List<Object> resultados = null;
