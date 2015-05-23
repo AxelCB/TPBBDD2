@@ -28,9 +28,9 @@ public class Queries {
 			listarTareasConDescripcion(session,"comprobar");
 			pizarraConMasTareas(session);
 			emailsDeAdministradorDeProyectosConMasDeUnaPizarraArchivada(session);
-			tareasQueHayanPasadoPorPizarra(session);
+			tareasQueHayanPasadoPorPizarra(session,"backlogproyecto3782");  
 			tareasConMasPasosQue(session, 2);
-//			pizarrasConTareasDeAmbosTipos(session);
+			pizarrasConTareasDeAmbosTipos(session);
 			tareasPizarrasVencidasMarzo(session);
 			
 		}catch(Exception e){
@@ -100,15 +100,20 @@ public class Queries {
 		System.out.println("--------------------------------------");
 	}
 	
-	public static void tareasQueHayanPasadoPorPizarra(Session session){
+	public static void tareasQueHayanPasadoPorPizarra(Session session,String descripcionParametro){
 		System.out.println("--------------------------------------");
 		System.out.println("e)Obtener las tareas que hayan pasado por la pizarra cuyo nombre contenga una secuencia de caracteres enviada como parámetro. Imprimir “Tarea: <descripción>”");
 		System.out.println("--------------------------------------");
-		Query query = session.createQuery("FROM Tarea as t INNER JOIN  ");
-		String impresion = "Administrador: ";		
+		Query query = session.
+				createQuery("SELECT t FROM Tarea as t "
+							+ "INNER JOIN t.pasos as pa "
+							+ "INNER JOIN pa.pizarra as pi "
+						+ "WHERE pi.nombre LIKE :descripcionParametro").
+						setString("descripcionParametro", "%"+descripcionParametro+"%");
+		String impresion = "Tarea: ";		
 		List<Object> resultados = Queries.ejecutar(session, query);
 		for (Object object : resultados) {
-			System.out.println(impresion+(String)object);
+			System.out.println(impresion+((Tarea)object).getDescripcion());
 		}
 		System.out.println("--------------------------------------");
 	}
@@ -130,10 +135,8 @@ public class Queries {
 		System.out.println("--------------------------------------");
 		System.out.println("g)Obtener las pizarras que tengan tareas tanto de investigación como de desarrollo. Imprimir ”Pizarra: <nombre>” ");
 		System.out.println("--------------------------------------");
-		Query query = session.createQuery("FROM Pizarra WHERE id in ("
-				+ " SELECT p.id FROM TareaDeDesarrollo as tdd INNER JOIN Pizarra as p "
-				+ ") AND id in ("
-				+ " SELECT p.id FROM TareaDeInvestigacion as tdd INNER JOIN Pizarra as p )");
+		Query query = session.createQuery("SELECT distinct(p) FROM Pizarra as p,TareaDeDesarrollo tdd,TareaDeInvestigacion tdi "
+				+ "WHERE (tdd in elements(p.tareas) AND tdi in elements(p.tareas))");
 		String impresion = "Pizarra: ";		
 		List<Object> resultados = Queries.ejecutar(session, query);
 		for (Object object : resultados) {
