@@ -25,10 +25,10 @@ public class Queries {
 			session = factory.openSession();
 
 			listarPizzarras(session);
-			listarTareasConDescripcion(session,"comprobar");
+			listarTareasConDescripcion(session,"%site member%");
 			pizarraConMasTareas(session);
 			emailsDeAdministradorDeProyectosConMasDeUnaPizarraArchivada(session);
-			tareasQueHayanPasadoPorPizarra(session,"backlogproyecto3782");  
+			tareasQueHayanPasadoPorPizarra(session,"backlogproyecto8149");  
 			tareasConMasPasosQue(session, 2);
 			pizarrasConTareasDeAmbosTipos(session);
 			tareasPizarrasVencidasMarzo(session);
@@ -61,7 +61,7 @@ public class Queries {
 		System.out.println("b) Listar las tareas cuya descripción contenga una secuencia específica de caracteres (enviada como parámetro).Imprimir en consola: ”Tarea: <descripción>”");
 		System.out.println("--------------------------------------");
 		Query query = session.createQuery("FROM Tarea as t WHERE descripcion LIKE :descripcionParametro").
-				setString("descripcionParametro", "%"+descripcionParametro+"%");
+				setString("descripcionParametro", descripcionParametro);
 		String impresion = "Tarea: ";		
 		List<Object> resultados = Queries.ejecutar(session, query);
 		for (Object object : resultados) {
@@ -109,7 +109,7 @@ public class Queries {
 							+ "INNER JOIN t.pasos as pa "
 							+ "INNER JOIN pa.pizarra as pi "
 						+ "WHERE pi.nombre LIKE :descripcionParametro").
-						setString("descripcionParametro", "%"+descripcionParametro+"%");
+						setString("descripcionParametro", descripcionParametro);
 		String impresion = "Tarea: ";		
 		List<Object> resultados = Queries.ejecutar(session, query);
 		for (Object object : resultados) {
@@ -155,7 +155,7 @@ public class Queries {
 		System.out.println("--------------------------------------");
 		System.out.println("h)Obtener las pizarras que tengan tareas vencidas en marzo, es decir que sus fechas límite estén dentro marzo de 2015 y no estén completas. Imprimir “Pizarra: <nombre>”");
 		System.out.println("--------------------------------------");
-		Query query = session.createQuery("SELECT p FROM Pizarra as p INNER JOIN p.tareas as t "
+		Query query = session.createQuery("SELECT DISTINCT(p) FROM Pizarra as p INNER JOIN p.tareas as t "
 				+ "WHERE t.fechaLimite BETWEEN :startDate AND :endDate )")
 				.setDate("startDate", startDate.getTime())
 				.setDate("endDate", endDate.getTime());
